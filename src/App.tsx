@@ -1,35 +1,47 @@
-import { useEffect, useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
-
-const data = {
-  name: 'nguyen van thien',
-  age: 18,
-  email: 'thiennvph31142@fpt.edu.vn',
-  address: 'Ninh Bình',
-};
+import { useEffect, useState } from "react";
+import "./App.css";
+import { Route, Routes } from "react-router-dom";
+import Home from "./pages/Home";
+import Dashboard from "./pages/admin/Dashboard";
+import { Product } from "./interface/product";
+import { instance } from "./api";
 
 function App() {
-  const [isDark, setIsDark] = useState(false);
-
+  // const [product, setProduct] = useState<Product[]>([]);
+  // useEffect(() => {
+  //   (async () => {
+  //     const { data } = await instance.get(`/products`);
+  //     setProduct(data);
+  //   })();
+  // }, []);
+  // const handleRemove = async (id: any) => {
+  //   if (confirm("Ban co muon xoa khong?")) {
+  //     await instance.delete(`/products/${id}`);
+  //     setProduct(product.filter((item) => item.id != id));
+  //   }
+  // };
+  const [product, setProduct] = useState<Product[]>([]);
   useEffect(() => {
-    document.body.style.backgroundColor = isDark ? '#333' : '#fff';
-    document.body.style.color = isDark ? '#fff' : '#000';
-  }, [isDark]);
-
-  const handleSetTheme = () => {
-    setIsDark(prevIsDark => !   prevIsDark);
+    (async () => {
+      const { data } = await instance.get("/products");
+      setProduct(data);
+    })();
+  }, []);
+  const handleRemove = async (id: any) => {
+    if (confirm("Ban co muon xoa khong?")) {
+      await instance.delete(`/products/${id}`);
+      setProduct(product.filter((item) => item.id != id));
+    }
   };
-
   return (
     <>
-      <button onClick={handleSetTheme}>Set Theme</button>
-      <h1>Thông Tin Cá Nhân</h1>
-      <p>{data.name}</p>
-      <p>{data.age}</p>
-      <p>{data.email}</p>
-      <p>{data.address}</p>
+      <Routes>
+        <Route index element={<Home />} />
+        <Route
+          path="/admin"
+          element={<Dashboard product={product} onRemove={handleRemove} />}
+        />
+      </Routes>
     </>
   );
 }
