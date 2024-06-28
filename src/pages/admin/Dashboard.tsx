@@ -33,7 +33,11 @@ const Dashboard = ({ product, OnRemove }: Prop) => {
                   Xóa
                 </button>
               </td>
-              <Link to={`/admin/product-edit/${item.id}`}>Sửa</Link>
+              <td>
+                <Link to={`/admin/product-edit/${item.id}`}>
+                  <button className="btn btn-primary">Sửa</button>
+                </Link>
+              </td>
             </tr>
           ))}
         </tbody>

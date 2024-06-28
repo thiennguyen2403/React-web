@@ -46,8 +46,10 @@ function App() {
       } else {
         const res = await instance.post("/products", data);
         data.id = res.data.id;
+        alert("thêm thành công");
       }
       await fetchProducts();
+      alert("sửa thành công");
       navigate("/admin");
     } catch (error) {
       console.error("Có lỗi xảy ra khi gửi dữ liệu sản phẩm!", error);
