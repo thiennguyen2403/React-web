@@ -9,7 +9,7 @@ type Prop = {
 };
 
 const ProductForm = ({ onProduct }: Prop) => {
-  const { id } = useParams<{ id: string }>(); // Explicitly specify the type of useParams
+  const { id } = useParams<{ id: string }>();
 
   const {
     register,
@@ -23,13 +23,14 @@ const ProductForm = ({ onProduct }: Prop) => {
       (async () => {
         try {
           const { data } = await instance.get(`/products/${id}`);
-          reset(data); // Reset form values when data is fetched from the server
+          reset(data);
         } catch (error) {
           console.error("Error fetching product!", error);
         }
       })();
     }
   }, [id, reset]);
+
   const onSubmit: SubmitHandler<Product> = (data) => {
     const stringId = id ? `${id}` : undefined;
     onProduct({ ...data, id: stringId });
@@ -47,9 +48,19 @@ const ProductForm = ({ onProduct }: Prop) => {
             type="text"
             className="form-control"
             id="title"
-            {...register("title", { required: true })}
+            {...register("title", {
+              required: true,
+              minLength: 6,
+            })}
           />
-          {errors.title && <p className="text-danger">Title is required</p>}
+          {errors.title && errors.title.type === "required" && (
+            <p className="text-danger">Title is required</p>
+          )}
+          {errors.title && errors.title.type === "minLength" && (
+            <p className="text-danger">
+              Title must be at least 6 characters long
+            </p>
+          )}
         </div>
         <div className="mb-3">
           <label htmlFor="price" className="form-label">
@@ -59,9 +70,17 @@ const ProductForm = ({ onProduct }: Prop) => {
             type="number"
             className="form-control"
             id="price"
-            {...register("price", { required: true })}
+            {...register("price", {
+              required: true,
+              min: 0,
+            })}
           />
-          {errors.price && <p className="text-danger">Price is required</p>}
+          {errors.price && errors.price.type === "required" && (
+            <p className="text-danger">Price is required</p>
+          )}
+          {errors.price && errors.price.type === "min" && (
+            <p className="text-danger">Price cannot be negative</p>
+          )}
         </div>
         <div className="mb-3">
           <label htmlFor="description" className="form-label">
@@ -71,10 +90,18 @@ const ProductForm = ({ onProduct }: Prop) => {
             type="text"
             className="form-control"
             id="description"
-            {...register("description", { required: true })}
+            {...register("description", {
+              required: true,
+              maxLength: 30,
+            })}
           />
-          {errors.description && (
+          {errors.description && errors.description.type === "required" && (
             <p className="text-danger">Description is required</p>
+          )}
+          {errors.description && errors.description.type === "maxLength" && (
+            <p className="text-danger">
+              Description cannot exceed 30 characters
+            </p>
           )}
         </div>
         <div className="mb-3">
