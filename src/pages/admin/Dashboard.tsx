@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Product } from "../../interface/product";
-import { instance } from "../../api";
+import { Link } from "react-router-dom";
 interface Prop {
   product: Product[];
-  onRemove: (id: any) => void;
+  OnRemove: (id: any) => void;
 }
-const Dashboard = ({ product, onRemove }: Prop) => {
+const Dashboard = ({ product, OnRemove }: Prop) => {
   return (
     <div>
-      <h1>Hello Amin</h1>
-      <table className="table table-striped">
+      <Link to={"/admin/product-add"}>Add sản phẩm</Link>
+      <table className="table">
         <thead>
           <tr>
             <th scope="col">ID</th>
@@ -28,14 +28,12 @@ const Dashboard = ({ product, onRemove }: Prop) => {
               <td>
                 <button
                   className="btn btn-danger"
-                  onClick={() => onRemove(item.id)}
+                  onClick={() => OnRemove(item.id)}
                 >
                   Xóa
                 </button>
               </td>
-              <td>
-                <button className="btn btn-primary">Sửa</button>
-              </td>
+              <Link to={`/admin/product-edit/${item.id}`}>Sửa</Link>
             </tr>
           ))}
         </tbody>
